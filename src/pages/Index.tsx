@@ -7,7 +7,7 @@ import RoomCard from "@/components/RoomCard";
 import ProjectCard from "@/components/ProjectCard";
 import AddRoomDialog from "@/components/AddRoomDialog";
 import BottomNavigation from "@/components/BottomNavigation";
-import heroImage from "@/assets/hero-image.jpg";
+import masterBedroomImage from "@/assets/master-bedroom.jpg";
 import type { Room, Project } from "@/types";
 
 // Mock data for demo
@@ -16,7 +16,7 @@ const mockRooms: Room[] = [
     id: "1",
     name: "Master Bedroom",
     type: "Bedroom",
-    imageUrl: heroImage,
+    imageUrl: masterBedroomImage,
     projects: [
       { 
         id: "1", 
@@ -111,7 +111,7 @@ const Index = () => {
       {/* Hero Section */}
       <div className="relative overflow-hidden rounded-2xl">
         <img 
-          src={heroImage} 
+          src={masterBedroomImage} 
           alt="Beautiful home interior" 
           className="w-full h-48 object-cover"
         />
