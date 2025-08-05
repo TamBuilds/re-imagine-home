@@ -19,6 +19,12 @@ export interface Room {
   projects: Project[];
   totalBudget: number;
   completedProjects: number;
+  measurements?: {
+    length?: number;
+    width?: number;
+    height?: number;
+    squareFootage?: number;
+  };
 }
 
 export interface User {

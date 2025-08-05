@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Camera, DollarSign, ListChecks, MoreVertical } from "lucide-react";
+import { Camera, DollarSign, ListChecks, MoreVertical, Ruler } from "lucide-react";
 import type { Room } from "@/types";
 
 interface RoomCardProps {
@@ -57,6 +57,21 @@ const RoomCard = ({ room, onViewDetails, onAddProject }: RoomCardProps) => {
           <p className="text-sm text-muted-foreground">
             {room.projects.length} projects • {room.completedProjects} completed
           </p>
+          {room.measurements && (
+            <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+              <Ruler className="w-3 h-3" />
+              {room.measurements.length && room.measurements.width ? (
+                <span>{room.measurements.length}' × {room.measurements.width}' ({room.measurements.squareFootage?.toFixed(0)} sq ft)</span>
+              ) : (
+                <span>
+                  {[room.measurements.length && `${room.measurements.length}'L`, 
+                    room.measurements.width && `${room.measurements.width}'W`, 
+                    room.measurements.height && `${room.measurements.height}'H`]
+                    .filter(Boolean).join(' × ')}
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Budget Progress */}

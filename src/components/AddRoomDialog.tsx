@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import { Camera, Upload, DollarSign } from "lucide-react";
+import { Camera, Upload, DollarSign, Ruler } from "lucide-react";
 
 interface AddRoomDialogProps {
   open: boolean;
@@ -15,6 +15,12 @@ interface AddRoomDialogProps {
     type: string;
     imageUrl?: string;
     totalBudget: number;
+    measurements?: {
+      length?: number;
+      width?: number;
+      height?: number;
+      squareFootage?: number;
+    };
   }) => void;
 }
 
@@ -39,6 +45,9 @@ const AddRoomDialog = ({ open, onOpenChange, onAddRoom }: AddRoomDialogProps) =>
   const [totalBudget, setTotalBudget] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [length, setLength] = useState("");
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -55,17 +64,28 @@ const AddRoomDialog = ({ open, onOpenChange, onAddRoom }: AddRoomDialogProps) =>
   const handleSubmit = () => {
     if (!roomName || !roomType) return;
 
+    const measurements = length || width || height ? {
+      length: parseFloat(length) || undefined,
+      width: parseFloat(width) || undefined,
+      height: parseFloat(height) || undefined,
+      squareFootage: length && width ? parseFloat(length) * parseFloat(width) : undefined,
+    } : undefined;
+
     onAddRoom({
       name: roomName,
       type: roomType,
       imageUrl: imagePreview || undefined,
       totalBudget: parseFloat(totalBudget) || 0,
+      measurements,
     });
 
     // Reset form
     setRoomName("");
     setRoomType("");
     setTotalBudget("");
+    setLength("");
+    setWidth("");
+    setHeight("");
     setImageFile(null);
     setImagePreview(null);
     onOpenChange(false);
@@ -152,6 +172,43 @@ const AddRoomDialog = ({ open, onOpenChange, onAddRoom }: AddRoomDialogProps) =>
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          {/* Measurements */}
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <Ruler className="w-4 h-4" />
+              Room Measurements (Optional)
+            </Label>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Input
+                  type="number"
+                  placeholder="Length (ft)"
+                  value={length}
+                  onChange={(e) => setLength(e.target.value)}
+                />
+              </div>
+              <div>
+                <Input
+                  type="number"
+                  placeholder="Width (ft)"
+                  value={width}
+                  onChange={(e) => setWidth(e.target.value)}
+                />
+              </div>
+            </div>
+            <Input
+              type="number"
+              placeholder="Height (ft)"
+              value={height}
+              onChange={(e) => setHeight(e.target.value)}
+            />
+            {length && width && (
+              <p className="text-xs text-muted-foreground">
+                Square footage: {(parseFloat(length) * parseFloat(width)).toFixed(1)} sq ft
+              </p>
+            )}
           </div>
 
           {/* Budget */}
